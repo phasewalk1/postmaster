@@ -2,7 +2,7 @@ use common::{
     prelude::*,
     prostgen::{self, SendResponse},
 };
-use futures::{Stream, StreamExt};
+use futures::Stream;
 use prostgen::messenger_server::{Messenger, MessengerServer};
 use std::{pin::Pin, time::Duration};
 use tokio_stream::{wrappers::ReceiverStream, StreamExt as TokioStreamExt};
@@ -38,6 +38,7 @@ impl Messenger for MessengerService {
     }
 
     async fn get_all(&self, request: Request<AllMsgsRequest>) -> StreamResult<ServerStream> {
+        // TODO: Replace this with a ORM query using the id from the request, and return a stream of those msgs
         // create an infinite stream
         let rep = std::iter::repeat(Msg {
             id: 1.to_string(),
@@ -68,4 +69,15 @@ impl Messenger for MessengerService {
 }
 
 #[tokio::main(flavor = "current_thread")]
-async fn main() {}
+async fn main() {
+    let addr = "[::1]:50051".parse().unwrap();
+    let messenger = MessengerService::default();
+
+    println!("Server listening on {}", addr);
+
+    Server::builder()
+        .add_service(MessengerServer::new(messenger))
+        .serve(addr)
+        .await
+        .unwrap();
+}
