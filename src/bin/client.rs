@@ -1,6 +1,5 @@
-use mess::pb as prostgen;
-use prostgen::messenger::messenger_client::MessengerClient;
-use prostgen::messenger::{MsgRequest, MsgResponse};
+use common::{prelude::*, prostgen};
+use prostgen::messenger_client::MessengerClient;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {}

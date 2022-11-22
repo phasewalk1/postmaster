@@ -6,6 +6,7 @@ message Msg {
     string sent_at = 2;
     string sender = 3;
     string recipient = 4;
+    string text = 5;
 }
 
 message SendResponse {
