@@ -1,0 +1,25 @@
+[package]
+name = "sb-messenger"
+version = "0.1.0"
+edition = "2021"
+authors = ["phasewalk1"]
+
+[lib]
+name = "mess"
+path = "src/lib.rs"
+
+[[bin]]
+name = "msg-server"
+path = "src/bin/server.rs"
+
+[[bin]]
+name = "msg-client"
+path = "src/bin/client.rs"
+
+[dependencies]
+tonic = "*"
+prost = "*"
+tokio = { version = "*", features = ["macros", "rt"] }
+
+[build-dependencies]
+tonic-build = "*"

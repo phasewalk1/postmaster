@@ -1,0 +1,31 @@
+syntax = "proto3";
+package messenger;
+
+message Msg {
+    string id = 1;
+    string sent_at = 2;
+    string sender = 3;
+    string recipient = 4;
+}
+
+message SendResponse {
+    string message_id = 1;
+}
+
+message MsgRequest {
+    string message_id = 1;
+}
+
+message MsgResponse {
+    Msg msg = 1;
+}
+
+message AllMsgsRequest {
+    string client_id = 1;
+}
+
+service Messenger {
+    rpc SendMsg (Msg) returns (SendResponse);
+    rpc GetMsg (MsgRequest) returns (Msg);
+    rpc GetAll (AllMsgsRequest) returns (stream Msg);
+}

@@ -1,0 +1,4 @@
+[alias]
+serve = "run --bin msg-server"
+client = "run --bin msg-client"
+forge = "test -- --nocapture"
