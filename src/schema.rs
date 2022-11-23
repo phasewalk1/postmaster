@@ -1,7 +1,6 @@
 use crate::prelude::{Msg, MsgInTransit};
 use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
-use std::borrow::Cow;
 
 // Diesel TABLE
 diesel::table! {
