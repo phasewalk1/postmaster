@@ -1,5 +1,5 @@
 
-# ✉ sb-messenger![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/phasewalk1/sb-messenger/Quickstart/main)
+# ✉ sb-messenger  ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/phasewalk1/sb-messenger/Quickstart/main)
 
 This is the gRPC server for the SB-Messenger service. It is responsible for handling client requests and storing/retrieving data from the database. Some methods implement server-side streaming, while others are unary. The server is implemented using the Tonic library, which provides a gRPC server implementation on top of the Tokio runtime.
 
