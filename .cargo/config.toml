@@ -1,4 +1,5 @@
 [alias]
 serve = "run --bin msg-server"
 client = "run --bin msg-client"
-forge = "test -- --nocapture"
+forge = "test --test client -- --nocapture"
+view = "doc --bin msg-server --open"

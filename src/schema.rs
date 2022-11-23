@@ -2,7 +2,7 @@ use crate::prelude::{Msg, MsgInTransit};
 use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
 
-// Diesel TABLE
+/// Diesel ORM table 
 diesel::table! {
     msg (id) {
         id -> Int8,

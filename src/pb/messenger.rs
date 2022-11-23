@@ -42,6 +42,16 @@ pub struct AllMsgsRequest {
     #[prost(string, tag = "1")]
     pub client_id: ::prost::alloc::string::String,
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SentMsgsRequest {
+    #[prost(string, tag = "1")]
+    pub client_id: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReceivedMsgsRequest {
+    #[prost(string, tag = "1")]
+    pub client_id: ::prost::alloc::string::String,
+}
 /// Generated client implementations.
 pub mod messenger_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
@@ -154,6 +164,38 @@ pub mod messenger_client {
                 .server_streaming(request.into_request(), path, codec)
                 .await
         }
+        pub async fn get_sent_msgs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SentMsgsRequest>,
+        ) -> Result<tonic::Response<tonic::codec::Streaming<super::Msg>>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/messenger.Messenger/GetSentMsgs");
+            self.inner
+                .server_streaming(request.into_request(), path, codec)
+                .await
+        }
+        pub async fn get_received_msgs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReceivedMsgsRequest>,
+        ) -> Result<tonic::Response<tonic::codec::Streaming<super::Msg>>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/messenger.Messenger/GetReceivedMsgs");
+            self.inner
+                .server_streaming(request.into_request(), path, codec)
+                .await
+        }
     }
 }
 /// Generated server implementations.
@@ -179,6 +221,22 @@ pub mod messenger_server {
             &self,
             request: tonic::Request<super::AllMsgsRequest>,
         ) -> Result<tonic::Response<Self::GetAllStream>, tonic::Status>;
+        ///Server streaming response type for the GetSentMsgs method.
+        type GetSentMsgsStream: futures_core::Stream<Item = Result<super::Msg, tonic::Status>>
+            + Send
+            + 'static;
+        async fn get_sent_msgs(
+            &self,
+            request: tonic::Request<super::SentMsgsRequest>,
+        ) -> Result<tonic::Response<Self::GetSentMsgsStream>, tonic::Status>;
+        ///Server streaming response type for the GetReceivedMsgs method.
+        type GetReceivedMsgsStream: futures_core::Stream<Item = Result<super::Msg, tonic::Status>>
+            + Send
+            + 'static;
+        async fn get_received_msgs(
+            &self,
+            request: tonic::Request<super::ReceivedMsgsRequest>,
+        ) -> Result<tonic::Response<Self::GetReceivedMsgsStream>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct MessengerServer<T: Messenger> {
@@ -318,6 +376,77 @@ pub mod messenger_server {
                     let fut = async move {
                         let inner = inner.0;
                         let method = GetAllSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
+                            accept_compression_encodings,
+                            send_compression_encodings,
+                        );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/messenger.Messenger/GetSentMsgs" => {
+                    #[allow(non_camel_case_types)]
+                    struct GetSentMsgsSvc<T: Messenger>(pub Arc<T>);
+                    impl<T: Messenger> tonic::server::ServerStreamingService<super::SentMsgsRequest>
+                        for GetSentMsgsSvc<T>
+                    {
+                        type Response = super::Msg;
+                        type ResponseStream = T::GetSentMsgsStream;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::SentMsgsRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).get_sent_msgs(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = GetSentMsgsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
+                            accept_compression_encodings,
+                            send_compression_encodings,
+                        );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/messenger.Messenger/GetReceivedMsgs" => {
+                    #[allow(non_camel_case_types)]
+                    struct GetReceivedMsgsSvc<T: Messenger>(pub Arc<T>);
+                    impl<T: Messenger>
+                        tonic::server::ServerStreamingService<super::ReceivedMsgsRequest>
+                        for GetReceivedMsgsSvc<T>
+                    {
+                        type Response = super::Msg;
+                        type ResponseStream = T::GetReceivedMsgsStream;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ReceivedMsgsRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).get_received_msgs(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = GetReceivedMsgsSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
                             accept_compression_encodings,

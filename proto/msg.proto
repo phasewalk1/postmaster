@@ -32,8 +32,18 @@ message AllMsgsRequest {
     string client_id = 1;
 }
 
+message SentMsgsRequest {
+    string client_id = 1;
+}
+
+message ReceivedMsgsRequest {
+    string client_id = 1;
+}
+
 service Messenger {
     rpc SendMsg (MsgInTransit) returns (SendResponse);
     rpc GetMsg (MsgRequest) returns (Msg);
     rpc GetAll (AllMsgsRequest) returns (stream Msg);
+    rpc GetSentMsgs (SentMsgsRequest) returns (stream Msg);
+    rpc GetReceivedMsgs (ReceivedMsgsRequest) returns (stream Msg);
 }
