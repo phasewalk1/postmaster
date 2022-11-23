@@ -9,8 +9,15 @@ message Msg {
     string text = 5;
 }
 
+message MsgInTransit {
+    string sender = 1;
+    string recipient = 2;
+    string text = 3;
+}
+
 message SendResponse {
     string message_id = 1;
+    string sent_at = 2;
 }
 
 message MsgRequest {
@@ -26,7 +33,7 @@ message AllMsgsRequest {
 }
 
 service Messenger {
-    rpc SendMsg (Msg) returns (SendResponse);
+    rpc SendMsg (MsgInTransit) returns (SendResponse);
     rpc GetMsg (MsgRequest) returns (Msg);
     rpc GetAll (AllMsgsRequest) returns (stream Msg);
 }

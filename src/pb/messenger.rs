@@ -12,9 +12,20 @@ pub struct Msg {
     pub text: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MsgInTransit {
+    #[prost(string, tag = "1")]
+    pub sender: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub recipient: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub text: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SendResponse {
     #[prost(string, tag = "1")]
     pub message_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub sent_at: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MsgRequest {
@@ -101,7 +112,7 @@ pub mod messenger_client {
         }
         pub async fn send_msg(
             &mut self,
-            request: impl tonic::IntoRequest<super::Msg>,
+            request: impl tonic::IntoRequest<super::MsgInTransit>,
         ) -> Result<tonic::Response<super::SendResponse>, tonic::Status> {
             self.inner.ready().await.map_err(|e| {
                 tonic::Status::new(
@@ -154,7 +165,7 @@ pub mod messenger_server {
     pub trait Messenger: Send + Sync + 'static {
         async fn send_msg(
             &self,
-            request: tonic::Request<super::Msg>,
+            request: tonic::Request<super::MsgInTransit>,
         ) -> Result<tonic::Response<super::SendResponse>, tonic::Status>;
         async fn get_msg(
             &self,
@@ -225,10 +236,13 @@ pub mod messenger_server {
                 "/messenger.Messenger/SendMsg" => {
                     #[allow(non_camel_case_types)]
                     struct SendMsgSvc<T: Messenger>(pub Arc<T>);
-                    impl<T: Messenger> tonic::server::UnaryService<super::Msg> for SendMsgSvc<T> {
+                    impl<T: Messenger> tonic::server::UnaryService<super::MsgInTransit> for SendMsgSvc<T> {
                         type Response = super::SendResponse;
                         type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
-                        fn call(&mut self, request: tonic::Request<super::Msg>) -> Self::Future {
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::MsgInTransit>,
+                        ) -> Self::Future {
                             let inner = self.0.clone();
                             let fut = async move { (*inner).send_msg(request).await };
                             Box::pin(fut)

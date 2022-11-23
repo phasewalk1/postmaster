@@ -1,10 +1,12 @@
 use common::{
     prelude::*,
-    prostgen::{self, SendResponse},
+    prostgen::{self, MsgInTransit, SendResponse},
+    schema::QueryableMsg,
 };
+use diesel::prelude::*;
 use futures::Stream;
 use prostgen::messenger_server::{Messenger, MessengerServer};
-use std::{pin::Pin, time::Duration};
+use std::{pin::Pin, sync::Arc, time::Duration};
 use tokio_stream::{wrappers::ReceiverStream, StreamExt as TokioStreamExt};
 use tonic::{transport::Server, Request, Response, Status, Streaming};
 
@@ -18,53 +20,40 @@ type StreamResult<T> = Result<Response<T>, Status>;
 impl Messenger for MessengerService {
     type GetAllStream = ServerStream;
 
-    async fn send_msg(&self, request: Request<Msg>) -> Result<Response<SendResponse>, Status> {
-        println!("Got a request: {:?}", request);
-        let reply = SendResponse {
-            message_id: 1.to_string(),
-        };
-        Ok(Response::new(reply))
+    async fn send_msg(
+        &self,
+        request: Request<MsgInTransit>,
+    ) -> Result<Response<SendResponse>, Status> {
+        let msg: MsgInTransit = request.into_inner();
+        println!("Got a message: {:?}", msg);
+
+        let mut conn = common::db::establish_connection();
+        let diesel_msg = common::schema::InsertableMsg::try_from(msg)
+            .map_err(|_| Status::invalid_argument("Invalid timestamp"))?;
+        let msg = diesel::insert_into(common::schema::msg::table)
+            .values(&diesel_msg)
+            .get_result::<common::schema::QueryableMsg>(&mut conn)
+            .map_err(|_| Status::internal("Error inserting into database"))?;
+        return Ok(Response::new(SendResponse {
+            message_id: msg.id.to_string(),
+            sent_at: chrono::Utc::now().naive_utc().to_string(),
+        }));
     }
+
     async fn get_msg(&self, request: Request<MsgRequest>) -> Result<Response<Msg>, Status> {
-        println!("Got a request: {:?}", request);
-        let reply = Msg {
-            id: 1.to_string(),
-            sender: "server".to_string(),
-            recipient: "client".to_string(),
-            sent_at: "now".to_string(),
-            text: "Hello, world!".to_string(),
-        };
-        Ok(Response::new(reply))
+        let msg_request: MsgRequest = request.into_inner();
+        println!("Got a message request: {:?}", msg_request);
+
+        let mut conn = common::db::establish_connection();
+        let msg: QueryableMsg = common::schema::msg::table
+            .filter(common::schema::msg::id.eq(msg_request.message_id.parse::<i64>().unwrap()))
+            .get_result(&mut conn)
+            .map_err(|_| Status::not_found("Message not found"))?;
+        return Ok(Response::new(msg.into()));
     }
 
     async fn get_all(&self, request: Request<AllMsgsRequest>) -> StreamResult<ServerStream> {
-        // TODO: Replace this with a ORM query using the id from the request, and return a stream of those msgs
-        // create an infinite stream
-        let rep = std::iter::repeat(Msg {
-            id: 1.to_string(),
-            sender: "server".to_string(),
-            recipient: "client".to_string(),
-            sent_at: "now".to_string(),
-            text: "Hello, world!".to_string(),
-        });
-        let mut stream = Box::pin(tokio_stream::iter(rep).throttle(Duration::from_millis(200)));
-
-        // handling disconnect functionality
-        let (tx, rx) = tokio::sync::mpsc::channel(4);
-        tokio::spawn(async move {
-            while let Some(msg) = TokioStreamExt::next(&mut stream).await {
-                match tx.send(Result::<_, Status>::Ok(msg)).await {
-                    Ok(_) => {}
-                    Err(_) => {
-                        eprintln!("Client disconnected");
-                        break;
-                    }
-                }
-            }
-        });
-
-        let stream = ReceiverStream::new(rx);
-        Ok(Response::new(Box::pin(stream) as ServerStream))
+        todo!()
     }
 }
 

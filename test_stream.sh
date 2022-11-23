@@ -1,1 +1,0 @@
-cargo serve & cargo client && fg
