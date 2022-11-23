@@ -15,9 +15,11 @@ jobs:
     name: Check
     runs-on: ubuntu-latest
     steps:
-      - run: apt install -y protobuf-compiler
       - name: Checkout sources
         uses: actions/checkout@v2
+      
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -35,9 +37,11 @@ jobs:
     name: Test Suite
     runs-on: ubuntu-latest
     steps:
-      - run: apt install -y protobuf-compiler
       - name: Checkout sources
         uses: actions/checkout@v2
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
