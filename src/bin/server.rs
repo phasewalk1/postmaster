@@ -10,7 +10,7 @@ use common::{
     prelude::*,
     prostgen::{self, MsgInTransit, ReceivedMsgsRequest, SendResponse, SentMsgsRequest},
 };
-use futures::Stream;
+use futures::{Stream, StreamExt};
 use prostgen::messenger_server::{Messenger, MessengerServer};
 use std::pin::Pin;
 use tokio_stream::wrappers::ReceiverStream;
@@ -77,11 +77,20 @@ impl Messenger for MessengerService {
         let msgs_by_sender: Vec<Msg> = get_msg_by_sender(sent_request).await.map_err(|e| {
             Status::internal(format!("Error getting messages from database: {:?}", e))
         })?;
-        // Return the messages to the client
+
+        // Turn the messages iterator into a stream
+        let mut stream = Box::pin(tokio_stream::iter(msgs_by_sender));
+        // Return the stream to the client
         let (tx, rx) = tokio::sync::mpsc::channel(4);
         tokio::spawn(async move {
-            for msg in msgs_by_sender {
-                tx.send(Ok(msg)).await.unwrap();
+            while let Some(item) = stream.next().await {
+                match tx.send(Result::<_, Status>::Ok(item)).await {
+                    Ok(_) => {}
+                    Err(e) => {
+                        log::error!("Error sending message to client: {:?}", e);
+                        break;
+                    }
+                }
             }
         });
 
@@ -103,10 +112,18 @@ impl Messenger for MessengerService {
             get_msg_by_recipient(received_request).await.map_err(|e| {
                 Status::internal(format!("Error getting messages from database: {:?}", e))
             })?;
+        let mut stream = Box::pin(tokio_stream::iter(msgs_by_recipient));
+
         let (tx, rx) = tokio::sync::mpsc::channel(4);
         tokio::spawn(async move {
-            for msg in msgs_by_recipient {
-                tx.send(Ok(msg)).await.unwrap();
+            while let Some(item) = stream.next().await {
+                match tx.send(Result::<_, Status>::Ok(item)).await {
+                    Ok(_) => {}
+                    Err(e) => {
+                        log::error!("Error sending message to client: {:?}", e);
+                        break;
+                    }
+                }
             }
         });
 
