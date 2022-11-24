@@ -81,7 +81,7 @@ impl Messenger for MessengerService {
         // Turn the messages iterator into a stream
         let mut stream = Box::pin(tokio_stream::iter(msgs_by_sender));
         // Return the stream to the client
-        let (tx, rx) = tokio::sync::mpsc::channel(4);
+        let (tx, rx) = tokio::sync::mpsc::channel(512);
         tokio::spawn(async move {
             while let Some(item) = stream.next().await {
                 match tx.send(Result::<_, Status>::Ok(item)).await {
@@ -114,7 +114,7 @@ impl Messenger for MessengerService {
             })?;
         let mut stream = Box::pin(tokio_stream::iter(msgs_by_recipient));
 
-        let (tx, rx) = tokio::sync::mpsc::channel(4);
+        let (tx, rx) = tokio::sync::mpsc::channel(128);
         tokio::spawn(async move {
             while let Some(item) = stream.next().await {
                 match tx.send(Result::<_, Status>::Ok(item)).await {
@@ -133,7 +133,7 @@ impl Messenger for MessengerService {
     }
 }
 
-#[tokio::main(flavor = "current_thread")]
+#[tokio::main]
 async fn main() {
     let addr = "[::1]:50051".parse().unwrap();
     let messenger = MessengerService::default();
