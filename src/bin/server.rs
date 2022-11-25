@@ -34,6 +34,7 @@ impl Messenger for MessengerService {
     ) -> Result<Response<SendResponse>, Status> {
         // Get the message from the request
         let msg = request.into_inner();
+        log::info!("Received message: {:?}", msg);
 
         // Insert the message into the database
         let saved_msg = create_msg(msg)
@@ -138,7 +139,8 @@ async fn main() {
     let addr = "[::1]:50051".parse().unwrap();
     let messenger = MessengerService::default();
 
-    println!("Server listening on {}", addr);
+    pretty_env_logger::try_init().ok();
+    log::info!("Starting server on: {}", addr);
 
     Server::builder()
         .add_service(MessengerServer::new(messenger))
