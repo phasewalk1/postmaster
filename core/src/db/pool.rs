@@ -1,9 +1,6 @@
 use diesel::pg::PgConnection;
 use diesel::r2d2::{self, ConnectionManager, PooledConnection};
 use lazy_static::lazy_static;
-use rocket::outcome::IntoOutcome;
-use rocket::request::{self, FromRequest, Request};
-use rocket::State;
 use std::env::var as env;
 use std::rc::Rc;
 

@@ -231,7 +231,6 @@ dependencies = [
  "log 0.4.17",
  "pretty_env_logger",
  "prost",
- "rocket 0.5.0-rc.2",
  "rocket_contrib",
  "serde",
  "tokio",
