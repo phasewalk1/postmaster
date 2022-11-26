@@ -1,11 +1,18 @@
 use carrera::pool::Pool;
 use diesel::pg::PgConnection;
 use diesel::r2d2::{self, ConnectionManager};
+use diesel::Connection;
 use rocket::request::{self, FromRequest, Request};
 use rocket::State;
 
 /// A wrapper around the connection pool that acts as a request guard
 pub struct PoolGuard(pub r2d2::PooledConnection<ConnectionManager<PgConnection>>);
+
+impl From<r2d2::PooledConnection<ConnectionManager<PgConnection>>> for PoolGuard {
+    fn from(conn: r2d2::PooledConnection<ConnectionManager<PgConnection>>) -> Self {
+        Self(conn)
+    }
+}
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for PoolGuard {
