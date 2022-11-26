@@ -1,5 +1,4 @@
 use crate::prelude::{Msg, MsgInTransit};
-use crate::db::connection::DB_POOL;
 use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
 
@@ -21,21 +20,6 @@ pub struct InsertableMsg<'a> {
     pub sender: &'a str,
     pub recipient: &'a str,
     pub content: &'a str,
-}
-
-impl<'a> InsertableMsg<'a> {
-    pub fn insert(&self) -> Result<Msg, diesel::result::Error> {
-        use diesel::RunQueryDsl;
-
-        let mut conn = DB_POOL.raw_connection.get().unwrap_or_else(|e| {
-            panic!("Failed to get a connection from the pool: {}", e);
-        });
-        let res: QueryableMsg = diesel::insert_into(crate::schema::msg::table)
-            .values(self)
-            .get_result::<QueryableMsg>(&mut conn)
-            .expect("Error saving new msg");
-        return Ok(res.into());
-    }
 }
 
 /// Diesel: QueryableMsg <----> Proto: Msg

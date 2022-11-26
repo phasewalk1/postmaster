@@ -16,5 +16,6 @@ pub mod prelude {
 /// Diesel types that map to the protobuf schema
 pub mod schema;
 
-/// Db connection
+/// Database pooling and connection handlers
 pub mod db;
+pub use db::pool;
