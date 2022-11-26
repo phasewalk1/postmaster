@@ -1,16 +1,17 @@
 
 # ✉ sb-messenger  ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/phasewalk1/sb-messenger/Quickstart/main)
 
-This is the gRPC server for the SB-Messenger service. It is responsible for handling client requests and storing/retrieving data from the database. Some methods implement server-side streaming, while others are unary. The server is implemented using the Tonic library, which provides a gRPC server implementation on top of the Tokio runtime.
+This is the monorepo for the SB-Messenger service. It is responsible for handling messages in transit and storing/retrieving messages from the database. Some of the RPC methods implement server-side streaming, while others are unary. The gRPC server is implemented using the Tonic library, which provides a gRPC server implementation on top of the Tokio runtime. The HTTP server is implemented using the Rocket framework. Both servers share common protobuf schemas and diesel structs for composability.
 
 
 ## Workflow
 
-To run integration tests against a client, run the following command
+To run integration tests against a gRPC client, run the following command.
 
 ```bash
 cargo forge
 ```
+This will ensure all conversion methods from Diesel to PROST!, and vice versa, are implemented correctly.
 
 To view the documentation for the server implementation, run
 ```bash
