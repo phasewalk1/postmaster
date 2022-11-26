@@ -1,0 +1,8 @@
+-- Your SQL goes here
+CREATE TABLE msg (
+    id BIGSERIAL PRIMARY KEY,
+    sent_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    sender VARCHAR(255) NOT NULL,
+    recipient VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL
+);

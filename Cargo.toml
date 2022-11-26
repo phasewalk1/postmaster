@@ -1,27 +1,2 @@
-[package]
-name = "sb-messenger"
-version = "0.1.0"
-edition = "2021"
-authors = ["phasewalk1"]
-
-[lib]
-name = "common"
-path = "src/lib.rs"
-
-[[bin]]
-name = "msg-server"
-path = "src/bin/server.rs"
-
-[[bin]]
-name = "msg-client"
-path = "src/bin/client.rs"
-
-[dependencies]
-tonic = "*"
-prost = "*"
-tokio = { version = "*", features = ["macros", "rt"] }
-futures = "0.3.25"
-tokio-stream = "0.1.11"
-
-[build-dependencies]
-tonic-build = "*"
+[workspace]
+members = ["core", "http-server", "grpc-service"]
