@@ -9,7 +9,7 @@ pub use pb::messenger as prostgen;
 pub mod prelude {
     pub use super::prostgen::{
         AllMsgsRequest, Msg, MsgInTransit, MsgRequest, MsgResponse, ReceivedMsgsRequest,
-        SentMsgsRequest,
+        SendResponse, SentMsgsRequest,
     };
 }
 

@@ -33,11 +33,11 @@ message AllMsgsRequest {
 }
 
 message SentMsgsRequest {
-    string client_id = 1;
+    string sender = 1;
 }
 
 message ReceivedMsgsRequest {
-    string client_id = 1;
+    string recipient = 1;
 }
 
 service Messenger {

@@ -45,12 +45,12 @@ pub struct AllMsgsRequest {
 #[derive(serde::Serialize, serde::Deserialize, Clone, PartialEq, ::prost::Message)]
 pub struct SentMsgsRequest {
     #[prost(string, tag = "1")]
-    pub client_id: ::prost::alloc::string::String,
+    pub sender: ::prost::alloc::string::String,
 }
 #[derive(serde::Serialize, serde::Deserialize, Clone, PartialEq, ::prost::Message)]
 pub struct ReceivedMsgsRequest {
     #[prost(string, tag = "1")]
-    pub client_id: ::prost::alloc::string::String,
+    pub recipient: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
 pub mod messenger_client {

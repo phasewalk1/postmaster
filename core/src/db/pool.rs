@@ -6,8 +6,7 @@ use std::rc::Rc;
 
 // A lazily initialized database url, needs to be set at runtime
 lazy_static! {
-    pub static ref DATABASE_URL: String =
-        { env("DATABASE_URL").expect("DATABASE_URL must be set") };
+    pub static ref DATABASE_URL: String = env("DATABASE_URL").expect("DATABASE_URL must be set");
 }
 
 /// A Postgres connection pool
@@ -25,21 +24,21 @@ pub fn init_pool() -> Pool {
 /// Raw pool state
 #[derive(Debug)]
 pub struct PoolState {
-    state: Rc<diesel::r2d2::State>,
+    state: diesel::r2d2::State,
 }
 
 impl PoolState {
     /// Read the underlying state
     pub fn read(&self) -> &diesel::r2d2::State {
         // unwrap the RC
-        return Rc::<diesel::r2d2::State>::as_ref(&self.state);
+        return &self.state;
     }
 }
 
 impl From<Pool> for PoolState {
     fn from(pool: Pool) -> Self {
         Self {
-            state: Rc::new(pool.state()),
+            state: pool.state(),
         }
     }
 }
