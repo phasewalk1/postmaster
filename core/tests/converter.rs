@@ -1,7 +1,7 @@
 #![cfg(test)]
 #![allow(dead_code)]
-use common::schema::{InsertableMsg, QueryableMsg};
-use common::{prelude::*, prostgen};
+use carrera::schema::{InsertableMsg, QueryableMsg};
+use carrera::{prelude::*, prostgen};
 #[allow(unused_imports)]
 use log::{error, info};
 use prostgen::messenger_client::MessengerClient;
@@ -31,7 +31,7 @@ async fn send_msg_test() {
 async fn get_all_sent() {
     let mut client = instantiate_client().await;
     let request = tonic::Request::new(SentMsgsRequest {
-        client_id: "test_sender".to_string(),
+        sender: "test_sender".to_string(),
     });
 
     let mut stream = client.get_sent_msgs(request).await.unwrap().into_inner();
@@ -44,7 +44,7 @@ async fn get_all_sent() {
 async fn get_all_rec() {
     let mut client = instantiate_client().await;
     let request = tonic::Request::new(ReceivedMsgsRequest {
-        client_id: "test_recipient".to_string(),
+        recipient: "test_recipient".to_string(),
     });
 
     let mut stream = client

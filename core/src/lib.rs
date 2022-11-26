@@ -9,12 +9,13 @@ pub use pb::messenger as prostgen;
 pub mod prelude {
     pub use super::prostgen::{
         AllMsgsRequest, Msg, MsgInTransit, MsgRequest, MsgResponse, ReceivedMsgsRequest,
-        SentMsgsRequest,
+        SendResponse, SentMsgsRequest,
     };
 }
 
 /// Diesel types that map to the protobuf schema
 pub mod schema;
 
-/// Db connection
+/// Database pooling and connection handlers
 pub mod db;
+pub use db::pool;

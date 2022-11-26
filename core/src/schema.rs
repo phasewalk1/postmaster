@@ -1,4 +1,4 @@
-use crate::prelude::{Msg, MsgInTransit};
+use crate::prelude::*;
 use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
 
@@ -61,6 +61,15 @@ impl From<QueryableMsg> for Msg {
             sender: msg.sender,
             recipient: msg.recipient,
             text: msg.text,
+        };
+    }
+}
+
+impl From<QueryableMsg> for SendResponse {
+    fn from(msg: QueryableMsg) -> Self {
+        return SendResponse {
+            message_id: msg.id.to_string(),
+            sent_at: msg.sent_at.to_string(),
         };
     }
 }
