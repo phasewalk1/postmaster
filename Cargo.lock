@@ -997,9 +997,11 @@ dependencies = [
 name = "sb-messenger"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "chrono",
  "diesel",
  "futures",
+ "lazy_static",
  "log",
  "pretty_env_logger",
  "prost",
