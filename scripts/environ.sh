@@ -1,6 +1,6 @@
 # !/bin/bash
 
-export DATABASE_URL="postgres://localhost:5432/your_database_name"
+export DATABASE_URL="postgresql://postgres:example@localhost:5432/postgres"
 export RUST_LOG="debug"
 export RUST_BACKTRACE=1
 
