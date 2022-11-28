@@ -1,10 +1,11 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 #![feature(stmt_expr_attributes)]
 #![allow(non_snake_case)]
+#![forbid(unsafe_code)]
+#![deny(unused_imports, unused_crate_dependencies)]
 
 #[macro_use]
 extern crate rocket;
-use rocket::serde::json::Json;
 extern crate carrera;
 
 // Database connection pool
@@ -13,8 +14,17 @@ use carrera::pool::rocket as pool;
 use carrera::prelude::*;
 // Common ORM schemas and proto conversions
 use carrera::schema::*;
+// Rocket exposes serde json
+use rocket::serde::json::Json;
+
+// Our PoolGuard implementation that wraps a r2d2 connection pool
 mod extension;
 
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////  ROUTES  ///////////////////////////////////////
+/// Send a message
+///  @params: message: Message
+///     * data - proto::Msg
 #[post("/", data = "<msg>")]
 fn send(msg: Json<MsgInTransit>, conn: extension::PoolGuard) -> Json<SendResponse> {
     let new_msg: NewMsg<'_> = msg.into_inner().into();

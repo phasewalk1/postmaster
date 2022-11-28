@@ -62,6 +62,18 @@ pub struct ReceivedMsgsRequest {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Thread {
+    #[prost(string, tag = "1")]
+    pub peer1: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub peer2: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub created_at: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "4")]
+    pub msgs: ::prost::alloc::vec::Vec<Msg>,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ThreadRequest {
     #[prost(string, tag = "1")]
     pub user_id: ::prost::alloc::string::String,

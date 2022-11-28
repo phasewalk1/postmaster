@@ -68,7 +68,6 @@ impl From<Msg> for SendResponse {
 #[derive(Debug, Deserialize, Insertable)]
 #[diesel(table_name = thread)]
 pub struct NewThread<'t> {
-    pub id: i32,
     pub peer1: &'t str,
     pub peer2: &'t str,
     pub messages: Option<Vec<i32>>,

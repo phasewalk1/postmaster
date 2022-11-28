@@ -1,5 +1,5 @@
 use diesel::pg::PgConnection;
-use diesel::r2d2::{self, ConnectionManager, PooledConnection};
+use diesel::r2d2::{self, ConnectionManager};
 use lazy_static::lazy_static;
 use std::env::var as env;
 
@@ -53,15 +53,15 @@ pub mod tonic {
 
     super::lazy_static! {
         pub static ref TONIC_POOL: Pooler = {
-           Pooler {
-               raw_conn: super::Pool::builder()
-                   .max_size(10)
-                   .build(super::ConnectionManager::new(super::env("DATABASE_URL").expect("DATABASE_URL must be set")))
-                   .expect("Failed to create TONIC_POOL"),
-           }
+            Pooler {
+                raw_conn: super::Pool::builder()
+                    .max_size(10)
+                    .build(super::ConnectionManager::new(super::env("DATABASE_URL").expect("DATABASE_URL must be set")))
+                    .expect("Failed to create TONIC_POOL"),
+            }
         };
     }
-    
+
     pub struct Pooler {
         pub raw_conn: super::Pool,
     }
@@ -73,7 +73,11 @@ pub mod tonic {
             let maybe_conn = self.raw_conn.get();
             match maybe_conn {
                 Ok(conn) => return Ok(conn),
-                Err(e) => return Err(tonic::Status::internal(format!("Error getting connection from Db pool")))
+                Err(_) => {
+                    return Err(tonic::Status::internal(format!(
+                        "Error getting connection from Db pool"
+                    )))
+                }
             }
         }
     }

@@ -1,8 +1,12 @@
 #![forbid(unsafe_code)]
+// Temporarily disable unused imports lint
+#![allow(unused_imports)]
+#![deny(unused_crate_dependencies)]
 use carrera::db::pool::tonic::TONIC_POOL;
 use carrera::prelude::*;
 use carrera::prostgen::messenger_server::{Messenger, MessengerServer};
 use carrera::schema::*;
+use chrono::{Duration, NaiveDateTime};
 use futures::{Stream, StreamExt};
 use log::*;
 use std::pin::Pin;
@@ -15,6 +19,8 @@ pub struct MessengerService {}
 type ServerStream = Pin<Box<dyn Stream<Item = Result<Msg, Status>> + Send>>;
 type StreamResult<T> = Result<Response<T>, Status>;
 
+// Temporarily disable unused parameters lint
+#[allow(unused_variables)]
 #[tonic::async_trait]
 impl Messenger for MessengerService {
     type GetSentMsgsStream = ServerStream;
