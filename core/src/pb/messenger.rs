@@ -60,6 +60,32 @@ pub struct ReceivedMsgsRequest {
     #[prost(string, tag = "1")]
     pub recipient: ::prost::alloc::string::String,
 }
+#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ThreadRequest {
+    #[prost(string, tag = "1")]
+    pub user_id: ::prost::alloc::string::String,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ThreadResponse {
+    #[prost(message, repeated, tag = "1")]
+    pub msgs: ::prost::alloc::vec::Vec<Msg>,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateThreadRequest {
+    #[prost(string, tag = "1")]
+    pub user_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub other_user_id: ::prost::alloc::string::String,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateThreadResponse {
+    #[prost(string, tag = "1")]
+    pub thread_id: ::prost::alloc::string::String,
+}
 /// Generated client implementations.
 pub mod messenger_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
@@ -233,6 +259,44 @@ pub mod messenger_client {
             );
             self.inner.server_streaming(request.into_request(), path, codec).await
         }
+        pub async fn get_thread(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ThreadRequest>,
+        ) -> Result<tonic::Response<super::ThreadResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/messenger.Messenger/GetThread",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        pub async fn create_thread(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateThreadRequest>,
+        ) -> Result<tonic::Response<super::CreateThreadResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/messenger.Messenger/CreateThread",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -278,6 +342,14 @@ pub mod messenger_server {
             &self,
             request: tonic::Request<super::ReceivedMsgsRequest>,
         ) -> Result<tonic::Response<Self::GetReceivedMsgsStream>, tonic::Status>;
+        async fn get_thread(
+            &self,
+            request: tonic::Request<super::ThreadRequest>,
+        ) -> Result<tonic::Response<super::ThreadResponse>, tonic::Status>;
+        async fn create_thread(
+            &self,
+            request: tonic::Request<super::CreateThreadRequest>,
+        ) -> Result<tonic::Response<super::CreateThreadResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct MessengerServer<T: Messenger> {
@@ -527,6 +599,82 @@ pub mod messenger_server {
                                 send_compression_encodings,
                             );
                         let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/messenger.Messenger/GetThread" => {
+                    #[allow(non_camel_case_types)]
+                    struct GetThreadSvc<T: Messenger>(pub Arc<T>);
+                    impl<T: Messenger> tonic::server::UnaryService<super::ThreadRequest>
+                    for GetThreadSvc<T> {
+                        type Response = super::ThreadResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ThreadRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).get_thread(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = GetThreadSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/messenger.Messenger/CreateThread" => {
+                    #[allow(non_camel_case_types)]
+                    struct CreateThreadSvc<T: Messenger>(pub Arc<T>);
+                    impl<
+                        T: Messenger,
+                    > tonic::server::UnaryService<super::CreateThreadRequest>
+                    for CreateThreadSvc<T> {
+                        type Response = super::CreateThreadResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::CreateThreadRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move {
+                                (*inner).create_thread(request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = CreateThreadSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
                         Ok(res)
                     };
                     Box::pin(fut)

@@ -17,7 +17,7 @@ mod extension;
 
 #[post("/", data = "<msg>")]
 fn send(msg: Json<MsgInTransit>, conn: extension::PoolGuard) -> Json<SendResponse> {
-    let new_msg: InsertableMsg<'_> = msg.into_inner().into();
+    let new_msg: NewMsg<'_> = msg.into_inner().into();
     let res = new_msg.insert(conn.0).unwrap();
     return Json(res.into());
 }

@@ -25,18 +25,22 @@ impl Messenger for MessengerService {
         &self,
         request: Request<MsgInTransit>,
     ) -> Result<Response<SendResponse>, Status> {
-        let new_msg: InsertableMsg<'_> = request.into_inner().into();
+        let new_msg: NewMsg<'_> = request.into_inner().into();
         log::info!("Received message: {:#?}", new_msg);
 
-        let maybe_conn  = TONIC_POOL.try_connect();
+        let maybe_conn = TONIC_POOL.try_connect();
         match maybe_conn {
             Ok(conn) => {
-                if let Ok(res) = new_msg.insert(conn) { return Ok(Response::new(res)) }
-                else { 
-                    return Err(Status::internal(format!("Failed to send msg: {:?}", new_msg))) 
+                if let Ok(res) = new_msg.insert(conn) {
+                    return Ok(Response::new(res));
+                } else {
+                    return Err(Status::internal(format!(
+                        "Failed to send msg: {:?}",
+                        new_msg
+                    )));
                 }
-            },
-            Err(e) => return Err(e)
+            }
+            Err(e) => return Err(e),
         }
     }
 
@@ -46,13 +50,17 @@ impl Messenger for MessengerService {
 
         if let Ok(conn) = TONIC_POOL.try_connect() {
             if let Ok(msg) = QueryableMsg::by_id(req.message_id.clone(), conn) {
-                return Ok(Response::new(msg))
+                return Ok(Response::new(msg));
             } else {
-                return Err(Status::not_found(format!("The msg was not found: {:#?}", req)))
+                return Err(Status::not_found(format!(
+                    "The msg was not found: {:#?}",
+                    req
+                )));
             }
-
         } else {
-            return Err(Status::internal(format!("Failed to get a DB connection from the pool")))
+            return Err(Status::internal(format!(
+                "Failed to get a DB connection from the pool"
+            )));
         }
     }
 
@@ -60,11 +68,28 @@ impl Messenger for MessengerService {
         todo!();
     }
 
-    async fn get_received_msgs(&self, request: Request<ReceivedMsgsRequest>) -> StreamResult<ServerStream> {
+    async fn get_received_msgs(
+        &self,
+        request: Request<ReceivedMsgsRequest>,
+    ) -> StreamResult<ServerStream> {
         todo!();
     }
 
     async fn get_all(&self, request: Request<AllMsgsRequest>) -> StreamResult<ServerStream> {
+        todo!();
+    }
+
+    async fn create_thread(
+        &self,
+        request: Request<CreateThreadRequest>,
+    ) -> Result<Response<CreateThreadResponse>, Status> {
+        todo!();
+    }
+
+    async fn get_thread(
+        &self,
+        request: Request<ThreadRequest>,
+    ) -> Result<Response<ThreadResponse>, Status> {
         todo!();
     }
 }

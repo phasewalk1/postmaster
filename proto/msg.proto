@@ -40,10 +40,29 @@ message ReceivedMsgsRequest {
     string recipient = 1;
 }
 
+message ThreadRequest {
+    string user_id = 1;
+}
+
+message ThreadResponse {
+    repeated Msg msgs = 1;
+}
+
+message CreateThreadRequest {
+    string user_id = 1;
+    string other_user_id = 2;
+}
+
+message CreateThreadResponse {
+    string thread_id = 1;
+}
+
 service Messenger {
     rpc SendMsg (MsgInTransit) returns (SendResponse);
     rpc GetMsg (MsgRequest) returns (Msg);
     rpc GetAll (AllMsgsRequest) returns (stream Msg);
     rpc GetSentMsgs (SentMsgsRequest) returns (stream Msg);
     rpc GetReceivedMsgs (ReceivedMsgsRequest) returns (stream Msg);
+    rpc GetThread (ThreadRequest) returns (ThreadResponse);
+    rpc CreateThread (CreateThreadRequest) returns (CreateThreadResponse);
 }

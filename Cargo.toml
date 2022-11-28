@@ -1,2 +1,3 @@
 [workspace]
 members = ["core", "http-server", "grpc-service"]
+default-members = ["core", "http-server", "grpc-service"]
