@@ -1,5 +1,5 @@
 
-# ✉ sb-messenger  ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/phasewalk1/sb-messenger/Quickstart/main)
+# ✉ sb-messenger  [![CodeFactor](https://www.codefactor.io/repository/github/phasewalk1/sb-messenger/badge)](https://www.codefactor.io/repository/github/phasewalk1/sb-messenger) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/phasewalk1/sb-messenger/Quickstart/main)
 
 This is the monorepo for the SB-Messenger service. It is responsible for handling messages in transit and storing/retrieving messages from the database. Some of the RPC methods implement server-side streaming, while others are unary. The gRPC server is implemented using the Tonic library, which provides a gRPC server implementation on top of the Tokio runtime. The HTTP server is implemented using the Rocket framework. Both servers share common protobuf schemas and diesel structs for composability.
 
