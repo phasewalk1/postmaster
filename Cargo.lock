@@ -779,6 +779,20 @@ checksum = "9b919933a397b79c37e33b77bb2aa3dc8eb6e165ad809e58ff75bc7db2e34574"
 [[package]]
 name = "grpc-service"
 version = "0.1.0"
+dependencies = [
+ "carrera",
+ "chrono",
+ "futures",
+ "lazy_static",
+ "log 0.3.9",
+ "pretty_env_logger",
+ "prost",
+ "serde",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "tonic-build",
+]
 
 [[package]]
 name = "h2"

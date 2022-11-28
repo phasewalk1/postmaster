@@ -20,7 +20,7 @@ impl QueryableMsg {
         // parsed as i64
         id: String,
         mut conn: PoolConn<T>,
-    ) -> Result<SendResponse, diesel::result::Error>
+    ) -> Result<Msg, diesel::result::Error>
     where
         T: diesel::r2d2::ManageConnection<Connection = diesel::pg::PgConnection>,
     {

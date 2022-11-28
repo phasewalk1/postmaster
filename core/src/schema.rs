@@ -73,3 +73,12 @@ impl From<QueryableMsg> for SendResponse {
         };
     }
 }
+
+impl From<Msg> for SendResponse {
+    fn from(msg: Msg) -> Self {
+        return SendResponse {
+            message_id: msg.id.to_string(),
+            sent_at: msg.sent_at.to_string()
+        }
+    }
+}

@@ -8,7 +8,7 @@ use rocket::serde::json::Json;
 extern crate carrera;
 
 // Database connection pool
-use carrera::pool;
+use carrera::pool::rocket as pool;
 // Common protobuf
 use carrera::prelude::*;
 // Common ORM schemas and proto conversions
