@@ -1,6 +1,6 @@
 #![cfg(test)]
 #![allow(dead_code)]
-use carrera::schema::{InsertableMsg, QueryableMsg};
+use carrera::schema::{NewMsg, QueryableMsg};
 use carrera::{prelude::*, prostgen};
 #[allow(unused_imports)]
 use log::{error, info};
@@ -70,7 +70,7 @@ async fn diesel_proto_impl() {
     };
     info!("(PROTO) MsgInTransit={:?}", &proto_msg);
 
-    let diesel_msg: InsertableMsg = proto_msg.into();
+    let diesel_msg: NewMsg = proto_msg.into();
     info!("(DIESEL) InsertableMsg={:?}", diesel_msg);
 
     // ----------------------------------------
@@ -80,8 +80,8 @@ async fn diesel_proto_impl() {
         id: 1,
         sender: "John Doe".to_string(),
         recipient: "Jane Doe".to_string(),
-        text: "Hello, world!".to_string(),
-        sent_at: chrono::Utc::now().naive_utc(),
+        body: "Hello, world!".to_string(),
+        timestamp: chrono::Utc::now().naive_utc(),
     };
     info!("(DIESEL) QueryableMsg={:?}", &diesel_msg);
 

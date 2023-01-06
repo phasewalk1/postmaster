@@ -1,26 +1,29 @@
 
-# ✉ sb-messenger  [![CodeFactor](https://www.codefactor.io/repository/github/phasewalk1/sb-messenger/badge)](https://www.codefactor.io/repository/github/phasewalk1/sb-messenger) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/phasewalk1/sb-messenger/Quickstart/main)
-
-This is the monorepo for the SB-Messenger service. It is responsible for handling messages in transit and storing/retrieving messages from the database. Some of the RPC methods implement server-side streaming, while others are unary. The gRPC server is implemented using the Tonic library, which provides a gRPC server implementation on top of the Tokio runtime. The HTTP server is implemented using the Rocket framework. Both servers share common protobuf schemas and diesel structs for composability.
-
+# ✉ postmaster [![CodeFactor](https://www.codefactor.io/repository/github/phasewalk1/postmaster/badge)](https://www.codefactor.io/repository/github/phasewalk1/postmaster) ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/phasewalk1/sb-messenger/Quickstart/main)
+![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white) ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+>>> checking, checking!
 
 ## Workflow
 
-To run integration tests against a gRPC client, run the following command.
+__Integration tests__
 
 ```bash
 cargo forge
 ```
 This will ensure all conversion methods from Diesel to PROST!, and vice versa, are implemented correctly.
 
-To view the documentation for the server implementation, run
+__Viewing the docs for the core library__
 ```bash
 cargo view
 ```
 
-You can run the server by issuing the following,
+__Running the HTTP server__
 ```bash
 cargo serve
+```
+__gRPC server__
+```bash
+cargo interop
 ```
 
 
@@ -66,4 +69,3 @@ cargo serve
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `recipient`      | `string` | **Required**. the id of the recipient whose Msgs to fetch |
-

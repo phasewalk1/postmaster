@@ -1,23 +1,33 @@
 syntax = "proto3";
 package messenger;
 
+service Messenger {
+    rpc SendMsg (MsgInTransit) returns (SendResponse);
+    rpc GetMsg (MsgRequest) returns (Msg);
+    rpc GetAll (AllMsgsRequest) returns (stream Msg);
+    rpc GetSentMsgs (SentMsgsRequest) returns (stream Msg);
+    rpc GetReceivedMsgs (ReceivedMsgsRequest) returns (stream Msg);
+    rpc GetThread (ThreadRequest) returns (ThreadResponse);
+    rpc CreateThread (CreateThreadRequest) returns (CreateThreadResponse);
+}
+
 message Msg {
-    string id = 1;
-    string sent_at = 2;
-    string sender = 3;
+    string id        = 1;
+    string sent_at   = 2;
+    string sender    = 3;
     string recipient = 4;
-    string text = 5;
+    string text      = 5;
 }
 
 message MsgInTransit {
-    string sender = 1;
+    string sender    = 1;
     string recipient = 2;
-    string text = 3;
+    string text      = 3;
 }
 
 message SendResponse {
     string message_id = 1;
-    string sent_at = 2;
+    string sent_at    = 2;
 }
 
 message MsgRequest {
@@ -40,10 +50,26 @@ message ReceivedMsgsRequest {
     string recipient = 1;
 }
 
-service Messenger {
-    rpc SendMsg (MsgInTransit) returns (SendResponse);
-    rpc GetMsg (MsgRequest) returns (Msg);
-    rpc GetAll (AllMsgsRequest) returns (stream Msg);
-    rpc GetSentMsgs (SentMsgsRequest) returns (stream Msg);
-    rpc GetReceivedMsgs (ReceivedMsgsRequest) returns (stream Msg);
+message Thread {
+    string peer1      = 1;
+    string peer2      = 2;
+    string created_at = 3;
+    repeated Msg msgs = 4;
+}
+
+message ThreadRequest {
+    string user_id = 1;
+}
+
+message ThreadResponse {
+    repeated Msg msgs = 1;
+}
+
+message CreateThreadRequest {
+    string user_id       = 1;
+    string other_user_id = 2;
+}
+
+message CreateThreadResponse {
+    string thread_id = 1;
 }

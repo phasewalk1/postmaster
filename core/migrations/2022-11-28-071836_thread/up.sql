@@ -1,0 +1,7 @@
+-- Your SQL goes here
+CREATE TABLE thread (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    peer1 VARCHAR(255) NOT NULL UNIQUE,
+    peer2 VARCHAR(255) NOT NULL UNIQUE,
+    messages INT[]
+);

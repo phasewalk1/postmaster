@@ -1,8 +1,7 @@
 use carrera::pool::Pool;
 use diesel::pg::PgConnection;
 use diesel::r2d2::{self, ConnectionManager};
-use diesel::Connection;
-use rocket::request::{self, FromRequest, Request};
+use rocket::request::{self, FromRequest, Outcome, Request};
 use rocket::State;
 
 /// A wrapper around the connection pool that acts as a request guard
@@ -14,6 +13,7 @@ impl From<r2d2::PooledConnection<ConnectionManager<PgConnection>>> for PoolGuard
     }
 }
 
+// Implement the request guard
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for PoolGuard {
     type Error = ();
@@ -24,21 +24,17 @@ impl<'r> FromRequest<'r> for PoolGuard {
             .await
             .map(|pool| pool.inner().clone());
         match outcome {
-            rocket::outcome::Outcome::Success(pool) => match pool.get() {
-                Ok(conn) => rocket::outcome::Outcome::Success(PoolGuard(conn)),
-                Err(_) => rocket::outcome::Outcome::Failure((
-                    rocket::http::Status::ServiceUnavailable,
-                    (),
-                )),
+            Outcome::Success(pool) => match pool.get() {
+                Ok(conn) => Outcome::Success(PoolGuard(conn)),
+                Err(_) => Outcome::Failure((rocket::http::Status::ServiceUnavailable, ())),
             },
-            rocket::outcome::Outcome::Forward(_) => rocket::outcome::Outcome::Forward(()),
-            rocket::outcome::Outcome::Failure((status, _)) => {
-                rocket::outcome::Outcome::Failure((status, ()))
-            }
+            Outcome::Forward(_) => Outcome::Forward(()),
+            Outcome::Failure((status, _)) => Outcome::Failure((status, ())),
         }
     }
 }
 
+// We need to be able to dereference the guard to get the underlying connection
 impl std::ops::Deref for PoolGuard {
     type Target = PgConnection;
 

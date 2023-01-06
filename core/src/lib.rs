@@ -8,8 +8,9 @@ pub use pb::messenger as prostgen;
 /// Common protobuf schema
 pub mod prelude {
     pub use super::prostgen::{
-        AllMsgsRequest, Msg, MsgInTransit, MsgRequest, MsgResponse, ReceivedMsgsRequest,
-        SendResponse, SentMsgsRequest,
+        AllMsgsRequest, CreateThreadRequest, CreateThreadResponse, Msg, MsgInTransit, MsgRequest,
+        MsgResponse, ReceivedMsgsRequest, SendResponse, SentMsgsRequest, ThreadRequest,
+        ThreadResponse,
     };
 }
 
