@@ -8,6 +8,8 @@
 extern crate rocket;
 extern crate postmaster;
 
+pub use self::rmain as launcher;
+
 // Database connection pool
 use postmaster::pool::rocket as pool;
 // Common protobuf
@@ -54,7 +56,7 @@ fn received(recipient: Json<ReceivedMsgsRequest>, conn: extension::PoolGuard) ->
 }
 
 #[launch]
-fn rocket() -> _ {
+pub fn rmain() -> _ {
     let DB_POOL = pool::init_pool();
 
     rocket::build()

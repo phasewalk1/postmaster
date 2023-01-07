@@ -7,10 +7,30 @@
 
 __Integration tests__
 
+Before running our integration tests, we need to set up the environment. Bash scripts are included for this purpose. We can quickly and easily spin up our docker container by running:
+```bash
+bash scripts/docker_spin.sh
+```
+Once we have the local postgres container running, we can launch the service (both the gRPC server and the HTTP server) with the following script:
+```bash
+bash scripts/launch_service.sh
+```
+Under the hood, this script will first source the environment variables from 'scripts/environ.sh', which will set 'RUST_LOG', 'DATABASE_URL', and a few other relevant environment variables for development.
+
+__Running integration tests on the service as a whole__
+
 ```bash
 cargo forge
 ```
-This will ensure all conversion methods from Diesel to PROST!, and vice versa, are implemented correctly.
+This will ensure all conversion methods from Diesel to PROST!, and vice versa, are implemented correctly, as well as running ALL tests from all 3 crates in the workspace.
+
+__Integration tests on individual crates__
+```bash
+cargo forge-grpc
+```
+```bash
+cargo forge-http
+```
 
 __Viewing the docs for the core library__
 ```bash

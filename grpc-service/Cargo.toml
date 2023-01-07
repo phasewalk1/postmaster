@@ -9,9 +9,9 @@ edition = "2021"
 name = "grpc-service"
 path = "src/main.rs"
 
-[[bin]]
+[[test]]
 name = "grpc-client"
-path = "src/example_client.rs"
+path = "tests/example_client.rs"
 
 [dependencies]
 tonic = "*"

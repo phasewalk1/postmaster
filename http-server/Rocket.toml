@@ -1,2 +1,5 @@
 [global.databases]
 devdb = "postgresql://postgres:example@localhost:5432/postgres"
+
+[global]
+port = 8080

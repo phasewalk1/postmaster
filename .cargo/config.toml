@@ -1,7 +1,7 @@
 [alias]
 forge = "test -- --nocapture"
 forge-http = "test -p http-server"
-forge-grpc = "test -p gprc-service"
+forge-grpc = "test -p grpc-service"
 view = "doc --lib --open"
 serve = "run --bin http-server"
 interop = "run --bin grpc-service"
