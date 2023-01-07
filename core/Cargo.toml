@@ -1,11 +1,11 @@
 [package]
-name = "carrera"
+name = "postmaster"
 version = "0.1.0"
 edition = "2021"
 authors = ["phasewalk1"]
 
 [lib]
-name = "carrera"
+name = "postmaster"
 path = "src/lib.rs"
 
 [[bench]]

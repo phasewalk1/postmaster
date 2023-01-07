@@ -25,5 +25,5 @@ log = "*"
 [build-dependencies]
 tonic-build = "*"
 
-[dependencies.carrera]
+[dependencies.postmaster]
 path = "../core"

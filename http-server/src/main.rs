@@ -2,18 +2,18 @@
 #![feature(stmt_expr_attributes)]
 #![allow(non_snake_case)]
 #![forbid(unsafe_code)]
-#![deny(unused_imports, unused_crate_dependencies)]
+#![deny(unused_imports)]
 
 #[macro_use]
 extern crate rocket;
-extern crate carrera;
+extern crate postmaster;
 
 // Database connection pool
-use carrera::pool::rocket as pool;
+use postmaster::pool::rocket as pool;
 // Common protobuf
-use carrera::prelude::*;
+use postmaster::prelude::*;
 // Common ORM schemas and proto conversions
-use carrera::schema::*;
+use postmaster::schema::*;
 // Rocket exposes serde json
 use rocket::serde::json::Json;
 

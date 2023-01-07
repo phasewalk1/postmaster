@@ -1,5 +1,6 @@
-//! 'common' library
-//! Used to organize pb files and share them between server and client
+//! 'postmaster' library
+
+/// Used to organize pb files and share them between server and client
 mod pb;
 
 /// Prost generated code

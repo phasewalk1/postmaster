@@ -1,6 +1,6 @@
-use carrera::pool::Pool;
 use diesel::pg::PgConnection;
 use diesel::r2d2::{self, ConnectionManager};
+use postmaster::pool::Pool;
 use rocket::request::{self, FromRequest, Outcome, Request};
 use rocket::State;
 

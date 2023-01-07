@@ -1,11 +1,9 @@
 #![cfg(test)]
 #![allow(dead_code)]
-use carrera::schema::{NewMsg, QueryableMsg};
-use carrera::{prelude::*, prostgen};
 #[allow(unused_imports)]
 use log::{error, info};
-use prostgen::messenger_client::MessengerClient;
-use prostgen::{ReceivedMsgsRequest, SentMsgsRequest};
+use postmaster::prelude::*;
+use postmaster::schema::{NewMsg, QueryableMsg};
 
 // Connect the client
 async fn instantiate_client() -> MessengerClient<tonic::transport::Channel> {

@@ -1,5 +1,5 @@
-use carrera::prelude::{MessengerClient, MsgInTransit};
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use postmaster::prelude::{MessengerClient, MsgInTransit};
 use tokio;
 use tonic::{transport::Channel, Request};
 
