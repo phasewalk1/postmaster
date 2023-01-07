@@ -3,6 +3,9 @@
 ![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white) ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 >>> checking, checking!
 
+# About
+`postmaster` is a microservice that enables messenging between users on the SB music platform, a home for producers and artists alike where they can share works and find each other. The messenging service serves a simple role in allowing users to reach out to one another to discuss their services and or products. The `postmaster` service is implemented both in gRPC and HTTP. The gRPC server provides an interface for other services to communicate with `postmaster` through use of protobuf, although primarily, the service will be used through the main HTTP gateway of SB. The backend of `postmaster` communicates with a PostgreSQL database, and a default docker container is provided for development and testing purposes.
+
 ## Workflow
 
 __Integration tests__
@@ -46,9 +49,7 @@ __gRPC server__
 cargo interop
 ```
 
-
-
-## API Reference
+# API Reference
 
 #### Send a Msg
 
