@@ -940,6 +940,7 @@ dependencies = [
  "log 0.4.17",
  "postmaster",
  "pretty_env_logger",
+ "prost",
  "tokio",
  "tokio-stream",
  "tonic",

@@ -1,2 +1,2 @@
-bash scripts/environ.sh
+source scripts/environ.sh
 sudo docker-compose up

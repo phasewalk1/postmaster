@@ -65,31 +65,6 @@ impl From<Msg> for SendResponse {
     }
 }
 
-#[derive(Debug, Deserialize, Insertable)]
-#[diesel(table_name = thread)]
-pub struct NewThread<'t> {
-    pub peer1: &'t str,
-    pub peer2: &'t str,
-    pub messages: Option<Vec<i32>>,
-}
-
-#[derive(Debug, Serialize, Queryable)]
-#[diesel(table_name = thread)]
-pub struct QueryableThread {
-    pub id: i32,
-    pub peer1: String,
-    pub peer2: String,
-    pub messages: Option<Vec<i32>>,
-}
-
-impl From<QueryableThread> for CreateThreadResponse {
-    fn from(thread: QueryableThread) -> Self {
-        Self {
-            thread_id: thread.id.to_string(),
-        }
-    }
-}
-
 table! {
     msg (id) {
         id -> Int4,
@@ -99,14 +74,3 @@ table! {
         sent_at -> Timestamp,
     }
 }
-
-table! {
-    thread (id) {
-        id -> Int4,
-        peer1 -> Varchar,
-        peer2 -> Varchar,
-        messages -> Nullable<Array<Int4>>,
-    }
-}
-
-allow_tables_to_appear_in_same_query!(msg, thread,);

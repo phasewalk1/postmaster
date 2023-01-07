@@ -19,22 +19,30 @@ use tonic::{transport::Server, Request, Response, Status};
 #[derive(Debug, Default)]
 pub struct MessengerService {}
 
+#[allow(dead_code)]
 type ServerStream = Pin<Box<dyn Stream<Item = Result<Msg, Status>> + Send>>;
+#[allow(dead_code)]
 type StreamResult<T> = Result<Response<T>, Status>;
+
+fn decompose_request<T>(req: Request<T>) -> T
+where
+    T: prost::Message + Clone,
+{
+    let req = req.into_inner();
+    log::info!("Got a request: {:#?}", req);
+    return req;
+}
 
 // Temporarily disable unused parameters lint
 #[allow(unused_variables)]
 #[tonic::async_trait]
 impl Messenger for MessengerService {
-    type GetSentMsgsStream = ServerStream;
-    type GetReceivedMsgsStream = ServerStream;
-    type GetAllStream = ServerStream;
-
     async fn send_msg(
         &self,
         request: Request<MsgInTransit>,
     ) -> Result<Response<SendResponse>, Status> {
-        let new_msg: NewMsg<'_> = request.into_inner().into();
+        let req = decompose_request(request);
+        let new_msg: NewMsg<'_> = req.into();
         log::info!("Received message: {:#?}", new_msg);
 
         let maybe_conn = TONIC_POOL.try_connect();
@@ -54,8 +62,7 @@ impl Messenger for MessengerService {
     }
 
     async fn get_msg(&self, request: Request<MsgRequest>) -> Result<Response<Msg>, Status> {
-        let req = request.into_inner();
-        log::info!("Got a request: {:#?}", req);
+        let req = decompose_request(request);
 
         if let Ok(conn) = TONIC_POOL.try_connect() {
             if let Ok(msg) = QueryableMsg::by_id(req.message_id.clone(), conn) {
@@ -73,32 +80,54 @@ impl Messenger for MessengerService {
         }
     }
 
-    async fn get_sent_msgs(&self, request: Request<SentMsgsRequest>) -> StreamResult<ServerStream> {
-        todo!();
+    async fn get_sent_msgs(
+        &self,
+        request: Request<SentMsgsRequest>,
+    ) -> Result<Response<MultiMsgResponse>, Status> {
+        let req = decompose_request(request);
+
+        if let Ok(conn) = TONIC_POOL.try_connect() {
+            if let Ok(msgs) = QueryableMsg::by_sender(req.sender.clone(), conn) {
+                return Ok(Response::new(MultiMsgResponse { msgs }));
+            } else {
+                return Err(Status::not_found(format!(
+                    "The msgs were not found: {:#?}",
+                    req
+                )));
+            }
+        } else {
+            return Err(Status::internal(format!(
+                "Failed to get a DB connection from the pool"
+            )));
+        }
     }
 
     async fn get_received_msgs(
         &self,
         request: Request<ReceivedMsgsRequest>,
-    ) -> StreamResult<ServerStream> {
-        todo!();
+    ) -> Result<Response<MultiMsgResponse>, Status> {
+        let req = decompose_request(request);
+
+        if let Ok(conn) = TONIC_POOL.try_connect() {
+            if let Ok(msgs) = QueryableMsg::by_recipient(req.recipient.clone(), conn) {
+                return Ok(Response::new(MultiMsgResponse { msgs }));
+            } else {
+                return Err(Status::not_found(format!(
+                    "The msgs were not found: {:#?}",
+                    req
+                )));
+            }
+        } else {
+            return Err(Status::internal(format!(
+                "Failed to get a DB connection from the pool"
+            )));
+        }
     }
 
-    async fn get_all(&self, request: Request<AllMsgsRequest>) -> StreamResult<ServerStream> {
-        todo!();
-    }
-
-    async fn create_thread(
+    async fn get_all(
         &self,
-        request: Request<CreateThreadRequest>,
-    ) -> Result<Response<CreateThreadResponse>, Status> {
-        todo!();
-    }
-
-    async fn get_thread(
-        &self,
-        request: Request<ThreadRequest>,
-    ) -> Result<Response<ThreadResponse>, Status> {
+        request: Request<AllMsgsRequest>,
+    ) -> Result<Response<MultiMsgResponse>, Status> {
         todo!();
     }
 }

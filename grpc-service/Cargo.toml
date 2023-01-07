@@ -21,6 +21,7 @@ tokio-stream = "0.1.1"
 chrono = { version = "0.4.23", features = ["serde"] }
 pretty_env_logger = "*"
 log = "*"
+prost = "*"
 
 [build-dependencies]
 tonic-build = "*"

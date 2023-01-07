@@ -12,9 +12,8 @@ pub mod prelude {
         messenger_client::MessengerClient, messenger_server::Messenger as MessengerServer,
     };
     pub use super::prostgen::{
-        AllMsgsRequest, CreateThreadRequest, CreateThreadResponse, Msg, MsgInTransit, MsgRequest,
-        MsgResponse, ReceivedMsgsRequest, SendResponse, SentMsgsRequest, ThreadRequest,
-        ThreadResponse,
+        AllMsgsRequest, Msg, MsgInTransit, MsgRequest, MsgResponse, MultiMsgResponse,
+        ReceivedMsgsRequest, SendResponse, SentMsgsRequest,
     };
 }
 
