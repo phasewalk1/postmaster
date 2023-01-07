@@ -2,6 +2,9 @@
 // Temporarily disable unused imports lint
 #![allow(unused_imports)]
 #![deny(unused_crate_dependencies)]
+
+#[macro_use]
+extern crate log;
 use carrera::db::pool::tonic::TONIC_POOL;
 use carrera::prelude::*;
 use carrera::prostgen::messenger_server::{Messenger, MessengerServer};

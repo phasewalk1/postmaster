@@ -1,0 +1,21 @@
+{
+    "proto": "proto/msg.proto",
+    "call": "messenger.Messenger.SendMsg",
+    "total": 2000,
+    "concurrency": 50,
+    "data": {
+        "sender": "prttyw1sh",
+        "recipient": "yung matt",
+        "text": "hey matt"
+    },
+    "metadata": {
+        "foo": "bar",
+        "trace_id": "{{.RequestNumber}}",
+        "timestamp": "{{.TimestampUnix}}"
+    },
+    "import-paths": [
+        "/../../../proto"
+    ],
+    "max-duration": "10s",
+    "host": "0.0.0.0:50051"
+}
