@@ -1,19 +1,15 @@
 #![forbid(unsafe_code)]
 // Temporarily disable unused imports lint
-#![allow(unused_imports)]
 #![deny(unused_crate_dependencies)]
 
-#[macro_use]
-extern crate log;
-use chrono::{Duration, NaiveDateTime};
-use futures::{Stream, StreamExt};
-use log::*;
-use postmaster::db::pool::tonic::TONIC_POOL;
-use postmaster::prelude::*;
-use postmaster::prostgen::messenger_server::{Messenger, MessengerServer};
-use postmaster::schema::*;
+use futures::Stream;
+use postmaster::{
+    db::pool::tonic::TONIC_POOL,
+    prelude::*,
+    prostgen::messenger_server::{Messenger, MessengerServer},
+    schema::*,
+};
 use std::pin::Pin;
-use tokio_stream::wrappers::ReceiverStream;
 use tonic::{transport::Server, Request, Response, Status};
 
 #[derive(Debug, Default)]

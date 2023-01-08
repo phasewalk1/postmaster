@@ -32,8 +32,13 @@ async fn get_all_sent() {
         sender: "test_sender".to_string(),
     });
 
-    let mut stream = client.get_sent_msgs(request).await.unwrap().into_inner();
-    while let Some(msg) = stream.message().await.unwrap() {
+    let msgs = client
+        .get_sent_msgs(request)
+        .await
+        .unwrap()
+        .into_inner()
+        .msgs;
+    for msg in msgs {
         dbg!("get_sent_msgs() RESPONSE={}", msg);
     }
 }
@@ -45,12 +50,13 @@ async fn get_all_rec() {
         recipient: "test_recipient".to_string(),
     });
 
-    let mut stream = client
+    let msgs = client
         .get_received_msgs(request)
         .await
         .unwrap()
-        .into_inner();
-    while let Some(msg) = stream.message().await.unwrap() {
+        .into_inner()
+        .msgs;
+    for msg in msgs {
         dbg!("get_received_msgs() RESPONSE={}", msg);
     }
 }

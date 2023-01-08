@@ -935,14 +935,12 @@ checksum = "9b919933a397b79c37e33b77bb2aa3dc8eb6e165ad809e58ff75bc7db2e34574"
 name = "grpc-service"
 version = "0.1.0"
 dependencies = [
- "chrono",
  "futures",
  "log 0.4.17",
  "postmaster",
  "pretty_env_logger",
  "prost",
  "tokio",
- "tokio-stream",
  "tonic",
  "tonic-build",
 ]

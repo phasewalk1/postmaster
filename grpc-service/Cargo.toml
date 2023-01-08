@@ -17,8 +17,6 @@ path = "tests/example_client.rs"
 tonic = "*"
 tokio = { version = "*", features = ["macros", "rt"] }
 futures = "0.3.25"
-tokio-stream = "0.1.1"
-chrono = { version = "0.4.23", features = ["serde"] }
 pretty_env_logger = "*"
 log = "*"
 prost = "*"

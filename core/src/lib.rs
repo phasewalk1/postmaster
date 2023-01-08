@@ -6,6 +6,13 @@ mod pb;
 /// Prost generated code
 pub use pb::messenger as prostgen;
 
+/// Diesel types that map to the protobuf schema
+pub mod schema;
+
+/// Database pooling and connection handlers
+pub mod db;
+pub use db::pool;
+
 /// Common protobuf schema
 pub mod prelude {
     pub use super::prostgen::{
@@ -16,10 +23,3 @@ pub mod prelude {
         ReceivedMsgsRequest, SendResponse, SentMsgsRequest,
     };
 }
-
-/// Diesel types that map to the protobuf schema
-pub mod schema;
-
-/// Database pooling and connection handlers
-pub mod db;
-pub use db::pool;
