@@ -1,6 +1,11 @@
 # !/bin/bash
 
-export DATABASE_URL="postgresql://postgres:example@localhost:5432/postgres"
+if [[ " $@ " =~ " --prod " ]]; then
+  :
+else
+  export DATABASE_URL="postgresql://postgres:example@localhost:5432/postgres"
+fi
+
 export RUST_LOG="debug"
 export RUST_BACKTRACE=1
 

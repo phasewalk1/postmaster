@@ -8,17 +8,23 @@
 
 ## Workflow
 
+__Running in production__
+To run the service in production, we only need to set the `DATABASE_URL` environment variable. This should point to the production data store that holds message data. Once that's set, we can spin up the service via the following:
+```bash
+bash scripts/launch_service.sh --prod
+```
+
 __Integration tests__
 
 Before running our integration tests, we need to set up the environment. Bash scripts are included for this purpose. We can quickly and easily spin up our docker container by running:
 ```bash
 bash scripts/docker_spin.sh
 ```
-Once we have the local postgres container running, we can launch the service (both the gRPC server and the HTTP server) with the following script:
+Once we have the local postgres container running, we can launch the service (both the gRPC server and the HTTP server) in _development mode_ by running the same `launch_service` script used for production (but this time, with no arguments passed at runtime):
 ```bash
 bash scripts/launch_service.sh
 ```
-Under the hood, this script will first source the environment variables from 'scripts/environ.sh', which will set 'RUST_LOG', 'DATABASE_URL', and a few other relevant environment variables for development.
+Under the hood, this script will first source the environment variables from `scripts/environ.sh`, which will set `RUST_LOG`, `ROCKET_PORT`, `TONIC_PORT`, as well as pointing `DATABASE_URL` to the local docker container.
 
 __Running integration tests on the service as a whole__
 
